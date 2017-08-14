@@ -17,25 +17,37 @@ class TimeLapseMapper
 
   def expanded_set
     if field == '*'
-      every_unit
+      every_unit_field
     elsif field.include?('/')
-      a, b = field.split('/')
-      if a == '*'
-        lapse.step(b.to_i).to_a
-      else
-        c,d = a.split('-').map(&:to_i)
-        lapse.step(b.to_i).to_a.select { |x| x > c && x <= d }
-      end
+      step_field
     elsif field.include?('-')
-      a, b = field.split('-').map(&:to_i)
-      every_unit[a,b]
+      range_field
     else
       field.split(',')
     end
   end
 
-  def every_unit
+  def step_field
+    time_units, step = field.split('/')
+
+    if time_units == '*'
+      step_values(step)
+    else
+      min, max = time_units.split('-').map(&:to_i)
+      step_values(step).select { |unit| unit > min && unit <= max }
+    end
+  end
+
+  def every_unit_field
     lapse.to_a
   end
 
+  def range_field
+    min, max = field.split('-').map(&:to_i)
+    every_unit_field[min, max]
+  end
+
+  def step_values(step)
+    lapse.step(step.to_i).to_a
+  end
 end
