@@ -24,7 +24,7 @@ module CronTask
       elsif field.include?('-')
         range_field
       else
-        field.split(',')
+        single_unit_field
       end
     end
 
@@ -35,7 +35,7 @@ module CronTask
         step_values(step)
       else
         min, max = time_units.split('-').map(&:to_i)
-        step_values(step).select { |unit| unit > min && unit <= max }
+        step_values(step).select { |unit| unit >= min && unit <= max }
       end
     end
 
@@ -45,7 +45,13 @@ module CronTask
 
     def range_field
       min, max = field.split('-').map(&:to_i)
-      every_unit_field[min, max]
+      every_unit_field.select { |unit| unit >= min && unit <= max }
+    end
+
+    def single_unit_field
+      field.split(',').
+        select { |unit| unit.to_i < every_unit_field.last }.
+        tap { |units| units << 0 if units.empty? }
     end
 
     def step_values(step)

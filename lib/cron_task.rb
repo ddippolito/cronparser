@@ -18,10 +18,10 @@ module CronTask
   def self.error_message
 <<-HEREDOC
 Invalid cron task
-Please provide a valid cron task
+Please provide a valid cron task in a string
 
 Usage:
-bin/cronparse * * * * * bin/do_something
+bin/cronparse "* * * * * bin/do_something"
 HEREDOC
   end
 

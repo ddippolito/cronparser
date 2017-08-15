@@ -37,10 +37,10 @@ describe CronTask::TimeLapseInterpreter do
   end
 
   it 'returns the frequency in comma separated interval' do
-    field = '1-5'
+    field = '3-8'
     interval = (0..10)
 
-    expect(described_class.call(interval, field)).to eq([1,2,3,4,5])
+    expect(described_class.call(interval, field)).to eq([3,4,5,6,7,8])
   end
 
   it 'returns the frequency in comma separated interval' do
